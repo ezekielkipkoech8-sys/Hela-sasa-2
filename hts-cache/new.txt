@@ -1,0 +1,7 @@
+date	size'/'remotesize	flags(request:Update,Range state:File response:Modified,Chunked,gZipped)	statuscode	status ('servermsg')	MIME	Etag|Date	URL	localfile	(from URL)
+23:25:39	37485/37485	---M-Z	200	added ('OK')	text/html	etag:%22926d-6a32b143-22e343f;gz%22	https://helasasa.com/	C:/My%20Web%20Sites/HELA%20SASA/helasasa.com/index.html	(from )
+23:25:40	711/711	---MCZ	404	error ('Not%20Found')	text/html	date:Wed,%2016%20Sep%202026%2020:25:39%20GMT	https://helasasa.com/robots.txt		(from )
+23:26:04	29144/29144	---M-Z	200	added ('OK')	text/html	date:Wed,%2016%20Sep%202026%2020:26:03%20GMT	https://helasasa.com/personal-details.php	C:/My%20Web%20Sites/HELA%20SASA/helasasa.com/personal-details.html	(from https://helasasa.com/)
+23:26:09	206676/206676	---M--	200	added ('OK')	text/javascript	etag:6009847240365127298	https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6034877278597930	C:/My%20Web%20Sites/HELA%20SASA/pagead2.googlesyndication.com/pagead/js/f2601.txt	(from https://helasasa.com/)
+23:26:12	37485/37485	---M-Z	200	added ('OK')	text/html	etag:%22926d-6a32b143-22e343f;gz%22	https://helasasa.com/index.html	C:/My%20Web%20Sites/HELA%20SASA/helasasa.com/index-2.html	(from https://helasasa.com/)
+23:26:13	74065/74065	---M--	200	added ('OK')	image/png	etag:%2212151-6a32b143-22e3430;;;%22	https://helasasa.com/assets/img/favicons/favicon.png	C:/My%20Web%20Sites/HELA%20SASA/helasasa.com/assets/img/favicons/favicon.png	(from https://helasasa.com/)

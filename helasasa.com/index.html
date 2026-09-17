@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<!-- Mirrored from helasasa.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Sep 2026 20:25:40 GMT -->
+<head>
+<script async src="../pagead2.googlesyndication.com/pagead/js/f2601.txt?client=ca-pub-6034877278597930"
+     crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hela Sasa | Get Your Loan Today</title>
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicons/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-deep:   #064E2B;
+      --green-mid:    #0A7A42;
+      --green-bright: #12A355;
+      --gold:         #E8A020;
+      --gold-light:   #F5C456;
+      --cream:        #DEDED5;
+      --dark:         #0D1A10;
+      --muted:        #5A7363;
+      --border:       rgba(10,122,66,0.12);
+      --ease:         cubic-bezier(.4,0,.2,1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ══════════════════════════════════════════
+       NAVBAR
+    ══════════════════════════════════════════ */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(210,210,200,0.82);
+      backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px);
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 1px 0 rgba(6,78,43,0.08);
+      padding: 0 5vw; height: 72px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem;
+      color: var(--green-deep); text-decoration: none; letter-spacing: -0.03em;
+      display: flex; align-items: center; gap: 8px;
+    }
+    /* Enhanced logo mark: SVG currency icon */
+    .nav-logo .logo-mark {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--green-bright), var(--green-deep));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 32px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.9rem; font-weight: 500; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green-deep); }
+    .btn-nav {
+      background: var(--green-deep);
+      color: #fff !important; padding: 10px 22px; border-radius: 50px;
+      font-weight: 600 !important; font-size: 0.88rem !important;
+      transition: background 0.2s, transform 0.15s !important;
+    }
+    .btn-nav:hover { background: var(--green-bright) !important; transform: translateY(-1px); }
+
+    /* ══════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 72px);
+      display: flex; align-items: center;
+      padding: 80px 5vw;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 40%, rgba(18,163,85,0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 10% 80%, rgba(232,160,32,0.09) 0%, transparent 60%),
+        var(--cream);
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute; right: -60px; top: 10%;
+      width: 520px; height: 520px; border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--green-bright) 0%, var(--gold) 25%, var(--green-bright) 50%, var(--green-deep) 100%);
+      opacity: 0.07;
+      animation: spinWobbleGlow 14s ease-in-out infinite;
+      transform-origin: 50% 50%;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; right: 60px; top: 15%;
+      width: 400px; height: 400px; border-radius: 50%;
+      border: 1.5px solid rgba(18,163,85,0.18);
+      animation: spinWobbleGlowRing 11s ease-in-out infinite reverse;
+      transform-origin: 50% 50%;
+    }
+
+    @keyframes spinWobbleGlow {
+      0%   { transform: rotate(0deg)   scale(1)     translate(0, 0);   opacity: 0.07;
+             filter: drop-shadow(0 0 0px rgba(18,163,85,0)); }
+      20%  { transform: rotate(70deg)  scale(1.045)  translate(4px,-3px); opacity: 0.10;
+             filter: drop-shadow(0 0 26px rgba(18,163,85,0.30)); }
+      40%  { transform: rotate(150deg) scale(0.965) translate(-3px,4px); opacity: 0.08;
+             filter: drop-shadow(0 0 14px rgba(232,160,32,0.22)); }
+      60%  { transform: rotate(230deg) scale(1.06)  translate(3px,3px);  opacity: 0.11;
+             filter: drop-shadow(0 0 34px rgba(18,163,85,0.36)); }
+      80%  { transform: rotate(300deg) scale(0.98)  translate(-4px,-2px); opacity: 0.08;
+             filter: drop-shadow(0 0 18px rgba(232,160,32,0.20)); }
+      100% { transform: rotate(360deg) scale(1)     translate(0, 0);   opacity: 0.07;
+             filter: drop-shadow(0 0 0px rgba(18,163,85,0)); }
+    }
+
+    @keyframes spinWobbleGlowRing {
+      0%   { transform: rotate(0deg)   scale(1);    border-color: rgba(18,163,85,0.18);
+             box-shadow: 0 0 0px rgba(18,163,85,0); }
+      25%  { transform: rotate(95deg)  scale(1.05);  border-color: rgba(18,163,85,0.32);
+             box-shadow: 0 0 36px rgba(18,163,85,0.18); }
+      50%  { transform: rotate(190deg) scale(0.96); border-color: rgba(232,160,32,0.34);
+             box-shadow: 0 0 22px rgba(232,160,32,0.16); }
+      75%  { transform: rotate(280deg) scale(1.04);  border-color: rgba(18,163,85,0.30);
+             box-shadow: 0 0 40px rgba(18,163,85,0.20); }
+      100% { transform: rotate(360deg) scale(1);    border-color: rgba(18,163,85,0.18);
+             box-shadow: 0 0 0px rgba(18,163,85,0); }
+    }
+
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 620px;
+    }
+
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(18,163,85,0.1); border: 1px solid rgba(18,163,85,0.25);
+      border-radius: 50px; padding: 6px 16px;
+      font-size: 0.8rem; font-weight: 600; color: var(--green-mid);
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .badge-pill .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green-bright); animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.4; transform:scale(0.7); }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 5.5vw, 5.2rem); font-weight: 800;
+      line-height: 1.05; letter-spacing: -0.03em; color: var(--dark);
+      margin-bottom: 24px; animation: fadeUp 0.6s 0.1s ease both;
+    }
+    h1 .highlight {
+      color: var(--green-bright); position: relative; display: inline-block;
+    }
+    h1 .highlight::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--green-bright), var(--gold));
+      border-radius: 4px;
+      transform: scaleX(0); transform-origin: left;
+      animation: scaleIn 0.8s 0.8s ease both;
+    }
+    @keyframes scaleIn { to { transform: scaleX(1); } }
+
+    .hero-sub {
+      font-size: 1.15rem; color: var(--muted); line-height: 1.7;
+      max-width: 500px; margin-bottom: 40px; font-weight: 400;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-cta {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green-mid), var(--green-deep));
+      color: #fff; padding: 16px 36px; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(6,78,43,0.25);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(6,78,43,0.35); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-outline {
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      color: var(--green-deep); padding: 16px 36px; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600;
+      text-decoration: none; border: 1.5px solid rgba(6,78,43,0.25); cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--green-mid); background: rgba(255,255,255,0.75); }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex; gap: 0; margin-top: 60px;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .stat { padding: 0 36px 0 0; border-right: 1px solid var(--border); margin-right: 36px; }
+    .stat:last-child { border-right: none; }
+
+    /* NEW: stat icon */
+    .stat-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.9rem; height: 1.9rem; border-radius: 9px;
+      background: rgba(18,163,85,0.10); color: var(--green-mid);
+      margin-bottom: 6px;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+      color: var(--green-deep); line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.78rem; color: var(--muted); font-weight: 500;
+      margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════════════════════════
+       NEW: HERO FLOATING APPROVAL CARD (right side)
+    ══════════════════════════════════════════ */
+    .hero-cards {
+      position: absolute;
+      right: 5vw; top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 14px;
+      z-index: 2;
+    }
+
+    /* Main approval card */
+    .hlc {
+      width: 268px;
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.75);
+      border-radius: 22px; padding: 22px;
+      box-shadow: 0 24px 64px rgba(6,78,43,0.14), 0 4px 16px rgba(6,78,43,0.08);
+      animation: floatCard 5s ease-in-out infinite;
+    }
+    .hlc-head {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    }
+    .hlc-check {
+      width: 2.2rem; height: 2.2rem; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-mid), var(--green-deep));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; flex-shrink: 0;
+    }
+    .hlc-title {
+      font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700;
+      color: var(--dark); line-height: 1.2;
+    }
+    .hlc-sub { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
+    .hlc-live {
+      margin-left: auto; display: flex; align-items: center; gap: 5px;
+      font-size: 0.7rem; font-weight: 700; color: var(--green-mid);
+      background: rgba(18,163,85,0.10); border: 1px solid rgba(18,163,85,0.22);
+      border-radius: 50px; padding: 3px 8px; white-space: nowrap;
+    }
+    .hlc-live .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green-bright); animation: pulse 2s infinite; }
+
+    .hlc-amount {
+      font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800;
+      color: var(--dark); letter-spacing: -0.02em; margin-bottom: 12px;
+    }
+
+    .hlc-bar-wrap {
+      height: 6px; border-radius: 999px;
+      background: rgba(0,0,0,0.07); overflow: hidden; margin-bottom: 10px;
+    }
+    .hlc-bar {
+      height: 100%; width: 82%;
+      background: linear-gradient(90deg, var(--green-bright), var(--gold));
+      border-radius: 999px;
+    }
+
+    .hlc-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.78rem; color: var(--muted); font-weight: 500;
+    }
+    .hlc-footer-icon {
+      display: flex; align-items: center; gap: 5px;
+    }
+    .hlc-eta {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem;
+      color: var(--green-mid);
+    }
+
+    /* Divider row in card */
+    .hlc-divider {
+      height: 1px; background: rgba(0,0,0,0.06); margin: 14px 0;
+    }
+    .hlc-steps {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .hlc-step-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.78rem; font-weight: 500; color: var(--muted);
+    }
+    .hlc-step-dot {
+      width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .hlc-step-dot.done {
+      background: rgba(18,163,85,0.12); color: var(--green-mid);
+    }
+    .hlc-step-dot.active {
+      background: var(--gold); color: var(--green-deep);
+    }
+    .hlc-step-dot.pending {
+      background: rgba(0,0,0,0.06); color: rgba(0,0,0,0.25);
+    }
+    .hlc-step-label.done   { color: var(--dark); }
+    .hlc-step-label.active { color: var(--dark); font-weight: 600; }
+    .hlc-step-label.pending{ color: rgba(90,115,99,0.55); }
+
+    /* Notification pill */
+    .hero-notif {
+      width: 232px;
+      background: var(--green-deep); border-radius: 16px;
+      padding: 13px 16px;
+      display: flex; align-items: center; gap: 11px;
+      box-shadow: 0 16px 48px rgba(6,78,43,0.28);
+      animation: floatCard 5s 2.4s ease-in-out infinite;
+      margin-left: auto;
+    }
+    .hn-icon {
+      width: 2rem; height: 2rem; border-radius: 10px;
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold-light); flex-shrink: 0;
+    }
+    .hn-title { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; color: #fff; }
+    .hn-sub   { font-size: 0.72rem; color: var(--gold-light); font-weight: 500; margin-top: 2px; }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 1100px) { .hero-cards { display: none; } }
+
+    /* ══════════════════════════════════════════
+       LOAN CARDS SECTION
+    ══════════════════════════════════════════ */
+    .section {
+      padding: 100px 5vw;
+      position: relative; z-index: 1;
+    }
+    .section-label {
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--green-bright); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 800;
+      letter-spacing: -0.025em; line-height: 1.1; color: var(--dark);
+      max-width: 500px; margin-bottom: 60px;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .loan-card {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.58);
+      border-radius: 20px; padding: 36px;
+      transition: transform 0.25s, box-shadow 0.25s;
+      position: relative; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(6,78,43,0.07);
+    }
+    .loan-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--green-bright), var(--gold));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .loan-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(6,78,43,0.13); }
+    .loan-card:hover::before { transform: scaleX(1); }
+
+    /* Enhanced card icon with SVG */
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .card-icon.green { background: rgba(18,163,85,0.10); color: var(--green-mid); }
+    .card-icon.gold  { background: rgba(232,160,32,0.12); color: #b87800; }
+    .card-icon.teal  { background: rgba(0,150,140,0.10);  color: #00796b; }
+
+    .loan-card h3 {
+      font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700;
+      color: var(--dark); margin-bottom: 12px;
+    }
+    .loan-card ul { list-style: none; margin-bottom: 24px; }
+    .loan-card ul li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.875rem; color: var(--muted);
+      padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    /* Enhanced list check: inline SVG via background */
+    .loan-card ul li::before {
+      content: '';
+      width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%230A7A42' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 10px no-repeat,
+                   rgba(18,163,85,0.10);
+    }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.875rem; font-weight: 600; color: var(--green-mid);
+      text-decoration: none; transition: gap 0.2s var(--ease);
+    }
+    .card-link:hover { gap: 10px; }
+    /* Arrow SVG for card-link */
+    .card-link-arrow { transition: transform 0.2s var(--ease); }
+    .card-link:hover .card-link-arrow { transform: translateX(3px); }
+
+    /* ══════════════════════════════════════════
+       HOW IT WORKS
+    ══════════════════════════════════════════ */
+    .steps {
+      background: var(--green-deep);
+      padding: 100px 5vw; position: relative; overflow: hidden;
+    }
+    .steps::before {
+      content: '';
+      position: absolute; top: -100px; right: -100px;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: rgba(255,255,255,0.02);
+    }
+    .steps .section-label { color: var(--gold-light); }
+    .steps .section-title { color: #fff; margin-bottom: 60px; }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px; position: relative; z-index: 1;
+    }
+    .step { position: relative; }
+
+    /* NEW: Step icon badge */
+    .step-icon-wrap {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 2.8rem; height: 2.8rem; border-radius: 14px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.13);
+      color: var(--gold-light); margin-bottom: 10px;
+    }
+
+    .step-num {
+      font-family: 'Syne', sans-serif; font-size: 4rem; font-weight: 800;
+      color: rgba(255,255,255,0.06); line-height: 1; margin-bottom: -12px;
+    }
+    .step h4 {
+      font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700;
+      color: #fff; margin-bottom: 10px;
+    }
+    .step p { font-size: 0.875rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+    /* ══════════════════════════════════════════
+       TRUST BAR
+    ══════════════════════════════════════════ */
+    .trust-bar {
+      background: var(--gold);
+      padding: 22px 5vw;
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 0.875rem; font-weight: 600; color: var(--green-deep);
+      padding: 6px 28px;
+      border-right: 1px solid rgba(6,78,43,0.18);
+    }
+    .trust-item:last-child { border-right: 0; }
+    .trust-icon-wrap {
+      display: flex; align-items: center; justify-content: center;
+      width: 1.85rem; height: 1.85rem; border-radius: 9px;
+      background: rgba(6,78,43,0.10); color: var(--green-deep); flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark); color: rgba(255,255,255,0.45);
+      padding: 32px 5vw; text-align: center; font-size: 0.85rem;
+    }
+    footer a { color: var(--gold-light); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero { padding: 60px 5vw; min-height: auto; }
+      .stats-bar { flex-wrap: wrap; gap: 24px; }
+      .stat { padding: 0; border-right: none; margin-right: 0; flex: 1 1 40%; }
+      .trust-item { flex: 1 1 45%; border-right: 0; border-bottom: 1px solid rgba(6,78,43,0.14); }
+      .trust-item:nth-child(odd)  { border-right: 1px solid rgba(6,78,43,0.14); }
+      .trust-item:nth-last-child(-n+2) { border-bottom: 0; }
+    }
+    @media (max-width: 480px) {
+      .trust-item { flex: 1 1 100%; border-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a class="nav-logo" href="index-2.html">
+      <!-- Logo mark: currency / money SVG icon -->
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      Hela Sasa
+    </a>
+    <ul class="nav-links">
+      <li><a href="personal-details.html">Salary Loans</a></li>
+      <li><a href="personal-details.html">Business Loans</a></li>
+      <li><a href="personal-details.html">Unsecured Loans</a></li>
+      <li><a href="personal-details.html" class="btn-nav">Apply Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+
+    <div class="hero-content">
+      <div class="badge-pill">
+        <span class="dot"></span>
+        Trusted by thousands of Kenyans
+      </div>
+      <h1>
+        Fast Loans.<br>
+        <span class="highlight">Zero Hassle.</span><br>
+        Real Money.
+      </h1>
+      <p class="hero-sub">
+        Hela Sasa delivers instant mobile loans to unbanked and underbanked Kenyans — no collateral, no bank statements, just your M-PESA number.
+      </p>
+      <div class="hero-cta">
+        <a href="personal-details.html" class="btn-primary">
+          Apply Now
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+        <a href="#how-it-works" class="btn-outline">How it works</a>
+      </div>
+
+      <!-- Stats bar with icons -->
+      <div class="stats-bar">
+        <div class="stat">
+          <div class="stat-icon">
+            <!-- Award / approval icon -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="8" r="6"/>
+              <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+            </svg>
+          </div>
+          <div class="stat-num">99%</div>
+          <div class="stat-label">Approval Rate</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">
+            <!-- Clock / speed icon -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="stat-num">24hrs</div>
+          <div class="stat-label">Avg. Disbursement</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">
+            <!-- Percent / rate icon -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="19" y1="5" x2="5" y2="19"/>
+              <circle cx="6.5" cy="6.5" r="2.5"/>
+              <circle cx="17.5" cy="17.5" r="2.5"/>
+            </svg>
+          </div>
+          <div class="stat-num">3.5%</div>
+          <div class="stat-label">Monthly Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Floating approval card (desktop only) ── -->
+    <div class="hero-cards" aria-hidden="true">
+
+      <!-- Main loan approval card -->
+      <div class="hlc">
+        <div class="hlc-head">
+          <span class="hlc-check">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          <div>
+            <div class="hlc-title">Loan Approved</div>
+            <div class="hlc-sub">Processing disbursement</div>
+          </div>
+          <div class="hlc-live"><span class="dot"></span>Live</div>
+        </div>
+
+        <div class="hlc-amount">KES 50,000</div>
+        <div class="hlc-bar-wrap">
+          <div class="hlc-bar"></div>
+        </div>
+        <div class="hlc-footer">
+          <span class="hlc-footer-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            &nbsp;Sending to M-PESA
+          </span>
+          <span class="hlc-eta">~2 min</span>
+        </div>
+
+        <div class="hlc-divider"></div>
+
+        <!-- Mini step tracker inside card -->
+        <div class="hlc-steps">
+          <div class="hlc-step-row">
+            <span class="hlc-step-dot done">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="hlc-step-label done">ID &amp; details verified</span>
+          </div>
+          <div class="hlc-step-row">
+            <span class="hlc-step-dot done">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="hlc-step-label done">Eligibility approved</span>
+          </div>
+          <div class="hlc-step-row">
+            <span class="hlc-step-dot active">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </span>
+            <span class="hlc-step-label active">Sending to M-PESA…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Received notification pill -->
+      <div class="hero-notif">
+        <div class="hn-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+        </div>
+        <div>
+          <div class="hn-title">Money Received</div>
+          <div class="hn-sub">KES 50,000 · M-PESA · Just now</div>
+        </div>
+      </div>
+
+    </div>
+    <!-- end hero-cards -->
+
+  </section>
+
+  <!-- LOAN PRODUCTS -->
+  <section class="section">
+    <div class="section-label">Loan Products</div>
+    <div class="section-title">The right loan<br>for every Kenyan.</div>
+    <div class="cards-grid">
+
+      <!-- Unsecured Loans -->
+      <div class="loan-card">
+        <div class="card-icon green">
+          <!-- Shield + check icon -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <h3>Unsecured Loans</h3>
+        <ul>
+          <li>National ID or Passport</li>
+          <li>No Collateral Required</li>
+          <li>No CRB Review</li>
+          <li>Loan Insurance Included</li>
+          <li>M-PESA Number</li>
+        </ul>
+        <a href="personal-details.html" class="card-link">
+          Apply now
+          <svg class="card-link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Business Loans -->
+      <div class="loan-card">
+        <div class="card-icon gold">
+          <!-- Trending up / bar chart icon -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6"  y1="20" x2="6"  y2="14"/>
+          </svg>
+        </div>
+        <h3>Business Loans</h3>
+        <ul>
+          <li>No Collateral Needed</li>
+          <li>Loan Insurance Included</li>
+          <li>National ID or Passport</li>
+          <li>Proof of Income</li>
+        </ul>
+        <a href="personal-details.html" class="card-link">
+          Apply now
+          <svg class="card-link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Salary Loans -->
+      <div class="loan-card">
+        <div class="card-icon teal">
+          <!-- Banknote / credit card icon -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+            <line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+        </div>
+        <h3>Salary Loans</h3>
+        <ul>
+          <li>Pay Slip &amp; Bank Statement</li>
+          <li>Employment Contract</li>
+          <li>National ID or Passport</li>
+          <li>Bank Account</li>
+          <li>Credit Score Check (CRB)</li>
+        </ul>
+        <a href="personal-details.html" class="card-link">
+          Apply now
+          <svg class="card-link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="steps" id="how-it-works">
+    <div class="section-label">Process</div>
+    <div class="section-title">Get funded in<br>three steps.</div>
+    <div class="steps-grid">
+
+      <div class="step">
+        <!-- Step icon: clipboard / form -->
+        <div class="step-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="9" y1="13" x2="15" y2="13"/>
+            <line x1="9" y1="17" x2="15" y2="17"/>
+          </svg>
+        </div>
+        <div class="step-num">01</div>
+        <h4>Fill Your Details</h4>
+        <p>Enter your personal information and choose your loan type. Takes under 2 minutes.</p>
+      </div>
+
+      <div class="step">
+        <!-- Step icon: check circle / approval -->
+        <div class="step-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="step-num">02</div>
+        <h4>Get Approved</h4>
+        <p>Our system verifies your details instantly. 99% of applicants qualify for a loan.</p>
+      </div>
+
+      <div class="step">
+        <!-- Step icon: smartphone / M-PESA -->
+        <div class="step-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="5" y="2" width="14" height="20" rx="2"/>
+            <line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+        </div>
+        <div class="step-num">03</div>
+        <h4>Receive via M-PESA</h4>
+        <p>After the small 1.8% insurance fee, your loan is sent directly to your M-PESA.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TRUST BAR — SVG icons replacing emoji -->
+  <div class="trust-bar">
+
+    <div class="trust-item">
+      <span class="trust-icon-wrap">
+        <!-- Lock / SSL -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </span>
+      SSL Secured
+    </div>
+
+    <div class="trust-item">
+      <span class="trust-icon-wrap">
+        <!-- Smartphone / M-PESA -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="5" y="2" width="14" height="20" rx="2"/>
+          <line x1="12" y1="18" x2="12.01" y2="18"/>
+        </svg>
+      </span>
+      M-PESA Integrated
+    </div>
+
+    <div class="trust-item">
+      <span class="trust-icon-wrap">
+        <!-- Check circle / no hidden fees -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </span>
+      No Hidden Fees
+    </div>
+
+    <div class="trust-item">
+      <span class="trust-icon-wrap">
+        <!-- Award / approval rating -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="8" r="6"/>
+          <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+        </svg>
+      </span>
+      99% Approval Rating
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2025 Hela Sasa LTD. All rights reserved.</p>
+  </footer>
+
+</body>
+
+<!-- Mirrored from helasasa.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Sep 2026 20:26:04 GMT -->
+</html>

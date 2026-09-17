@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hela Sasa | M-PESA Payment</title>
+<style>
+  :root {
+    --green: #1a6b3f;
+    --green-dark: #0e3a20;
+    --amber: #f0b94a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at 50% 0%, var(--green) 0%, var(--green-dark) 70%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+  }
+
+  .logo-row {
+    text-align: center;
+    padding: 30px 20px 10px;
+    font-size: 26px;
+    font-weight: 800;
+  }
+  .logo-row .hela { color: #fff; }
+  .logo-row .sasa { color: var(--amber); }
+
+  main {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px 20px 60px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    max-width: 460px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .card-hero {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    text-align: center;
+    padding: 34px 30px 30px;
+    color: #fff;
+  }
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin: 0 auto 16px;
+  }
+  .card-hero h1 { font-size: 23px; margin: 0 0 6px; font-weight: 800; }
+  .card-hero .subtitle { font-size: 14px; opacity: 0.9; }
+
+  .card-body { padding: 28px 30px 30px; }
+
+  .alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fdecea;
+    border: 1px solid #f6c6c0;
+    color: #b3401f;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .alert.show { display: flex; }
+  .alert.success { background: #e6f4ea; border-color: #b7e0c4; color: var(--green-dark); }
+
+  label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #7d8479;
+    margin-bottom: 8px;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    background: #f0ede2;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .input-wrap .prefix {
+    padding: 13px 12px 13px 15px;
+    font-size: 15px;
+    color: #6f6f60;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+  .input-wrap input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 13px 15px 13px 0;
+    font-size: 15px;
+    outline: none;
+    color: #1c2620;
+    font-weight: 600;
+  }
+
+  button.send-btn {
+    width: 100%;
+    background: var(--green-dark);
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 15.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button.send-btn:hover:not(:disabled) { background: #082414; }
+  button.send-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  footer {
+    text-align: center;
+    padding: 10px 20px 30px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+  }
+</style>
+</head>
+<body>
+
+<div class="logo-row"><span class="hela">Hela</span> <span class="sasa">Sasa</span></div>
+
+<main>
+  <div class="card">
+    <div class="card-hero">
+      <div class="icon-circle">📲</div>
+      <h1>M-PESA STK Push</h1>
+      <div class="subtitle">Pay your insurance fee to unlock your loan</div>
+    </div>
+
+    <div class="card-body">
+      <div class="alert" id="alertBox"></div>
+
+      <form id="stkForm">
+        <label for="phone">M-PESA Phone Number</label>
+        <div class="input-wrap">
+          <span class="prefix">📱</span>
+          <input type="tel" id="phone" placeholder="0712345678" required>
+        </div>
+
+        <label for="amount">Insurance Fee Amount (Ksh)</label>
+        <div class="input-wrap">
+          <span class="prefix">Ksh</span>
+          <input type="number" id="amount" placeholder="1500" required min="1">
+        </div>
+
+        <button type="submit" class="send-btn" id="payBtn">Send M-PESA Request →</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 Hela Sasa LTD. All rights reserved.</footer>
+
+<script>
+  const API_BASE = '';
+
+  // Prefill from query params handed off by loan-request.php
+  const prefill = new URLSearchParams(window.location.search);
+  if (prefill.get('phone')) {
+    document.getElementById('phone').value = prefill.get('phone').replace(/^254/, '0');
+  }
+  if (prefill.get('amount')) {
+    document.getElementById('amount').value = prefill.get('amount');
+  }
+
+  const form = document.getElementById('stkForm');
+  const payBtn = document.getElementById('payBtn');
+  const alertBox = document.getElementById('alertBox');
+  let pollTimer = null;
+
+  function showAlert(message, type) {
+    alertBox.textContent = (type === 'success' ? '✅ ' : '⚠️ ') + message;
+    alertBox.className = 'alert show' + (type === 'success' ? ' success' : '');
+  }
+
+  function normalizeMsisdn(raw) {
+    const digits = raw.replace(/\D/g, '');
+    if (digits.startsWith('254')) return digits;
+    if (digits.startsWith('0')) return '254' + digits.slice(1);
+    if (digits.startsWith('7') || digits.startsWith('1')) return '254' + digits;
+    return digits;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearInterval(pollTimer);
+
+    const phone = normalizeMsisdn(document.getElementById('phone').value.trim());
+    const amount = document.getElementById('amount').value.trim();
+
+    if (!/^254[71]\d{8}$/.test(phone)) {
+      showAlert('Enter a valid Safaricom number (07... or 01...)', 'error');
+      return;
+    }
+
+    payBtn.disabled = true;
+    showAlert('Sending request to your phone…', 'error');
+
+    const reference = 'insfee_' + Date.now();
+
+    try {
+      const res = await fetch(`${API_BASE}/api/stk/initiate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, msisdn: phone, reference })
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        showAlert(data.message || 'Could not start payment. Try again.', 'error');
+        payBtn.disabled = false;
+        return;
+      }
+
+      showAlert('Success. Request accepted for processing', 'error');
+
+      let attempts = 0;
+      pollTimer = setInterval(async () => {
+        attempts++;
+        try {
+          const statusRes = await fetch(`${API_BASE}/api/stk/status/${reference}`);
+          const status = await statusRes.json();
+
+          if (status.status === 'success') {
+            clearInterval(pollTimer);
+            showAlert('Payment received. Receipt: ' + status.receipt, 'success');
+            payBtn.disabled = false;
+          } else if (status.status === 'failed' || status.status === 'amount_mismatch') {
+            clearInterval(pollTimer);
+            showAlert('Payment was not completed. Please try again.', 'error');
+            payBtn.disabled = false;
+          } else if (attempts > 20) {
+            clearInterval(pollTimer);
+            showAlert('Taking longer than expected — check your M-PESA messages.', 'error');
+            payBtn.disabled = false;
+          }
+        } catch (err) {
+          console.error('Status poll error:', err);
+        }
+      }, 3000);
+    } catch (err) {
+      console.error('STK initiate error:', err);
+      showAlert('Network error. Please try again.', 'error');
+      payBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>

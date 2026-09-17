@@ -1,0 +1,15 @@
+# ── Secrets: never commit or push ──
+.env
+.env.*
+!.env.example
+
+# ── Dependencies ──
+node_modules/
+
+# ── Logs ──
+*.log
+npm-debug.log*
+
+# ── OS junk ──
+Thumbs.db
+.DS_Store

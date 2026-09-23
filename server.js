@@ -44,13 +44,17 @@ const orders = new Map();
 
 const app = express();
 
+app.get('/', (req, res) => {
+  res.send('Hela Sasa backend is running ✅');
+});
+
 // ── STATIC PAGES ────────────────────────────────────────────────────────────
 const path = require('path');
 // Serves backend/public — includes the static M-PESA STK Push payment page.
 app.use(express.static(path.join(__dirname, 'public')));
 // Also serve the frontend folder (index-2.html, personal-details.html) so the
 // whole flow can be tested from one local origin, e.g. /index-2.html.
-app.use(express.static(path.join(__dirname, '..', 'helasasa.com')));
+app.use(express.static(path.join(__dirname, 'helasasa.com')));
 
 // The legacy URL keeps working: it now serves the static HTML page instead of PHP.
 app.get('/stk/express-stk.php', function (req, res) {
@@ -70,7 +74,7 @@ app.get('/final-step.php', (req, res) => {
 });
 
 app.get('/personal-details.php', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'helasasa.com', 'personal-details.html'));
+  res.sendFile(path.join(__dirname, 'helasasa.com', 'personal-details.html'));
 });
 
 // ── CORS ────────────────────────────────────────────────────────────────────

@@ -45,7 +45,7 @@ const orders = new Map();
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Hela Sasa backend is running ✅');
+  res.sendFile(path.join(__dirname, 'helasasa.com', 'index.html'));
 });
 
 // ── STATIC PAGES ────────────────────────────────────────────────────────────

@@ -274,7 +274,7 @@ async function initiateStkPush(req, res) {
       }
 
       checkoutId = data
-        ? data.checkout_id || data.CheckoutRequestID || data.CheckoutRequestId || data.CheckoutID || null
+        ? data.checkout_id || data.checkoutid || data.CheckoutRequestID || data.CheckoutRequestId || data.CheckoutID || null
         : null;
 
       upstreamOk = Boolean(checkoutId) ||

@@ -1,0 +1,24 @@
+# ── HTTrack mirror artefacts ─────────────────────────────────────────────────
+# This repo is an HTTrack capture of helasasa.com. None of this is part of the
+# deployed app — server.js serves helasasa.com/ and public/ directly.
+hts-cache/
+pagead2.googlesyndication.com/
+hts-log.txt
+hts-log-node.txt
+backblue.gif
+fade.gif
+
+# The HTTrack "Local index" landing page. app.get('/') in server.js already
+# serves helasasa.com/index.html, so this file is never used.
+index.html
+
+# ── Duplicate backend copy ───────────────────────────────────────────────────
+# vercel.json builds ./server.js at the repository root and that copy serves
+# everything needed. backend/ is a second, historically divergent copy of the
+# same server — deploying it too only doubles the surface for bugs.
+backend/
+
+# ── Local-only ───────────────────────────────────────────────────────────────
+node_modules/
+.vercel
+*.log

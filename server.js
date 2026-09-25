@@ -7,30 +7,52 @@
  *   GET  /api/stk/status/:reference → order status (polled by the frontend)
  *   POST /api/webhook/hashpay       → signed HashPay webhook (payment results)
  *
- * ⚠️  STATE WARNING — READ BEFORE GOING LIVE
- * Orders are stored in an IN-MEMORY Map (see `orders` below). That is fine for
- * local development, but it will NOT survive across Vercel's stateless
- * serverless instances — each invocation may boot a fresh instance with an
- * empty Map, so a webhook can land on an instance that never saw the original
- * initiate call. Swap `orders` for Vercel KV (Upstash Redis) or any database
- * before going live; nothing else in this file needs to change.
+ * ⚠️  STATE — READ BEFORE DEPLOYING
+ * Orders live in Vercel KV (Upstash) when KV_REST_API_URL / KV_REST_API_TOKEN
+ * are set, and in an in-memory Map otherwise. The Map does NOT survive Vercel's
+ * stateless instances, so on a serverless deployment the webhook can land on an
+ * instance that never saw the original initiate call and every status poll then
+ * returns "unknown" — the applicant waits on "pending" forever even though the
+ * money arrived. Attach a KV store in the Vercel dashboard (Storage → Create
+ * Database → KV) and those two variables are injected automatically; nothing
+ * else in this file needs to change.
  */
 
 'use strict';
 
-require('dotenv').config();
-
-const express = require('express');
+const path = require('path');
 const crypto = require('crypto');
+const express = require('express');
+
+// ── ENVIRONMENT ──────────────────────────────────────────────────────────────
+// `dotenv.config()` with no arguments only reads process.cwd(), which is NOT the
+// directory this file lives in. Running `node server.js` from the repository
+// root therefore loaded nothing, and every STK push went out with
+// `api_key: undefined` — HashBack rejected it and no M-PESA prompt ever reached
+// the phone, while the server kept answering 200s so nothing looked broken.
+// Load .env by absolute path instead, checking the backend/ copy as well so that
+// both entrypoints share one set of credentials.
+//
+// dotenv never overwrites variables that already exist, so on Vercel — where the
+// real values come from the dashboard — these calls are harmless no-ops.
+require('dotenv').config({ path: path.join(__dirname, 'backend', '.env') });
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const HASHBACK_INITIATE_URL = 'https://api.hashback.co.ke/initiatestk';
 const MSISDN_PATTERN = /^254[71]\d{8}$/; // 254 + 7XXXXXXXX / 1XXXXXXXX (12 digits)
 
 /**
- * ⚠️ In-memory order store — swap for Vercel KV or a database before going
- * live (see the state warning at the top of this file).
+ * Order store — Vercel KV (Upstash REST) backed, with an in-memory fallback.
  *
- * Shape: Map<reference, {
+ * Vercel's Node runtime is stateless: each request can land on a fresh
+ * instance, so the original in-memory Map discarded the order between
+ * `initiate`, the HashPay webhook and every `/api/stk/status` poll. The prompt
+ * would arrive, the payment would go through, and the page would sit on
+ * "pending" until it timed out. When KV_REST_API_URL / KV_REST_API_TOKEN are
+ * set (Vercel injects these for a KV store) all three calls now share state.
+ * Locally, with no KV configured, it degrades to the Map as before.
+ *
+ * Shape: {
  *   reference: string,
  *   amount: number,
  *   msisdn: string,
@@ -38,9 +60,60 @@ const MSISDN_PATTERN = /^254[71]\d{8}$/; // 254 + 7XXXXXXXX / 1XXXXXXXX (12 digi
  *   checkout_id: string | null,
  *   receipt: string | null,
  *   createdAt: number
- * }>
+ * }
  */
 const orders = new Map();
+const KV_URL = process.env.KV_REST_API_URL;
+const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+const orderKey = (ref) => 'order:' + ref;
+
+/** Issue one command against the Upstash-compatible REST API. */
+async function kv(command, ...args) {
+  const res = await fetch(`${KV_URL}/${args.map(encodeURIComponent).join('/')}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${KV_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(command),
+    signal: AbortSignal.timeout(8000),
+  });
+  if (!res.ok) throw new Error(`${command} -> HTTP ${res.status}`);
+  return res.json();
+}
+
+/** Read an order, or null. Falls back to the in-memory Map if KV is off/erroring. */
+async function readOrder(ref) {
+  if (KV_URL && KV_TOKEN) {
+    try {
+      const data = await kv('GET', orderKey(ref));
+      return data && data.result ? JSON.parse(data.result) : null;
+    } catch (err) {
+      console.error('[orders] KV read failed for "' + ref + '", falling back to memory:', err.message);
+    }
+  }
+  return orders.get(String(ref)) || null;
+}
+
+/** Insert or replace an order. */
+async function writeOrder(ref, order) {
+  orders.set(String(ref), order);
+  if (KV_URL && KV_TOKEN) {
+    try {
+      await kv('SET', orderKey(ref), JSON.stringify(order));
+    } catch (err) {
+      console.error('[orders] KV write failed for "' + ref + '":', err.message);
+    }
+  }
+  return order;
+}
+
+/** Merge `changes` into an existing order. Returns null when the order is unknown. */
+async function patchOrder(ref, changes) {
+  const current = await readOrder(ref);
+  if (!current) return null;
+  return writeOrder(ref, Object.assign({}, current, changes));
+}
 
 const app = express();
 
@@ -49,7 +122,6 @@ app.get('/', (req, res) => {
 });
 
 // ── STATIC PAGES ────────────────────────────────────────────────────────────
-const path = require('path');
 // Serves backend/public — includes the static M-PESA STK Push payment page.
 app.use(express.static(path.join(__dirname, 'public')));
 // Also serve the frontend folder (index-2.html, personal-details.html) so the
@@ -136,7 +208,7 @@ async function initiateStkPush(req, res) {
 
     // Store as "pending" BEFORE calling HashBack so the frontend can start
     // polling immediately.
-    orders.set(ref, {
+    await writeOrder(ref, {
       reference: ref,
       amount: numericAmount,
       msisdn: String(msisdn),
@@ -148,6 +220,29 @@ async function initiateStkPush(req, res) {
 
     let checkoutId = null;
     let upstreamOk = false;
+    let upstreamMessage = null;
+    let upstreamStatus = null;
+
+    const apiKey = process.env.HASHBACK_API_KEY;
+    const accountId = process.env.HASHBACK_ACCOUNT_ID;
+
+    // Fail fast instead of firing a doomed request. Without credentials HashBack
+    // answers 403 ("Account expired") for a reason that has nothing to do with
+    // the real account, and the applicant just sees a generic failure.
+    if (!apiKey || !accountId) {
+      await patchOrder(ref, { status: 'failed' });
+      console.error(
+        '[stk/initiate] Refusing to call HashBack: HASHBACK_API_KEY / HASHBACK_ACCOUNT_ID are unset. ' +
+        'Set them in .env next to server.js, or as Vercel environment variables.'
+      );
+      return res.status(503).json({
+        success: false,
+        checkout_id: null,
+        reference: ref,
+        message:
+          'Payment service is not configured: HASHBACK_API_KEY and HASHBACK_ACCOUNT_ID are missing.',
+      });
+    }
 
     try {
       // Node 18+ global fetch.
@@ -155,8 +250,8 @@ async function initiateStkPush(req, res) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          api_key: process.env.HASHBACK_API_KEY,
-          account_id: process.env.HASHBACK_ACCOUNT_ID,
+          api_key: apiKey,
+          account_id: accountId,
           amount: numericAmount,
           msisdn: String(msisdn),
           reference: ref,
@@ -164,11 +259,18 @@ async function initiateStkPush(req, res) {
         signal: AbortSignal.timeout(15000),
       });
 
+      upstreamStatus = upstream.status;
+
+      // Read as text first. A 403/5xx from HashBack (or a proxy/WAF sitting in
+      // front of it) may return HTML or an empty body, and upstream.json()
+      // would throw and throw away the only useful diagnostic we have.
+      const rawBody = await upstream.text();
+
       let data = null;
       try {
-        data = await upstream.json();
+        data = rawBody ? JSON.parse(rawBody) : null;
       } catch (_) {
-        // Non-JSON upstream response.
+        // Non-JSON upstream response — rawBody is still logged below.
       }
 
       checkoutId = data
@@ -179,29 +281,50 @@ async function initiateStkPush(req, res) {
         Boolean(data && (data.ResponseCode === 0 || data.ResponseCode === '0' || data.success === true));
 
       if (!upstreamOk) {
+        upstreamMessage = extractUpstreamMessage(data) || (rawBody || '').trim().slice(0, 500) || null;
         console.error(
-          '[stk/initiate] HashBack responded but did not indicate success. HTTP status:',
-          upstream.status,
-          'Body:',
-          JSON.stringify(data)
+          '[stk/initiate] HashBack rejected the STK push.',
+          '\n  endpoint:  ', HASHBACK_INITIATE_URL,
+          '\n  http:      ', upstreamStatus,
+          '\n  reference: ', ref,
+          '\n  message:   ', upstreamMessage || '(none returned)',
+          '\n  raw body:  ', rawBody || '(empty)',
+          '\n  creds used -> api_key:', fingerprint(apiKey), '| account_id:', accountId || '(unset)'
         );
       }
     } catch (err) {
-      console.error('[stk/initiate] HashBack request failed:', err.message);
+      upstreamMessage =
+        err.name === 'TimeoutError' || err.name === 'AbortError'
+          ? 'HashBack did not respond within 15s.'
+          : 'Could not reach HashBack: ' + err.message;
+      console.error(
+        '[stk/initiate] HashBack request failed:', err.message,
+        err.cause ? ('| cause: ' + err.cause) : '',
+        '\n  endpoint: ', HASHBACK_INITIATE_URL,
+        '\n  reference:', ref,
+        '\n  creds used -> api_key:', fingerprint(apiKey), '| account_id:', accountId || '(unset)'
+      );
     }
 
     if (!upstreamOk) {
-      const order = orders.get(ref);
-      if (order) order.status = 'failed';
+      await patchOrder(ref, { status: 'failed' });
       return res.status(502).json({
         success: false,
         checkout_id: null,
         reference: ref,
-        message: 'Payment initiation failed. Please try again.',
+        // Surface the real provider reason (e.g. the 403 "Account expired"
+        // body) instead of a generic string, so the failure is diagnosable
+        // from the browser and the server log without extra digging.
+        message: upstreamMessage
+          ? 'Payment initiation failed: ' + upstreamMessage
+          : 'Payment initiation failed. Please try again.',
+        provider: 'hashback',
+        provider_status: upstreamStatus,
+        provider_message: upstreamMessage,
       });
     }
 
-    orders.get(ref).checkout_id = checkoutId;
+    await patchOrder(ref, { checkout_id: checkoutId });
 
     return res.json({
       success: true,
@@ -220,8 +343,8 @@ async function initiateStkPush(req, res) {
  * Returns the current status of an order: pending | success | failed |
  * amount_mismatch. The frontend polls this every few seconds.
  */
-function getOrderStatus(req, res) {
-  const order = orders.get(String(req.params.reference));
+async function getOrderStatus(req, res) {
+  const order = await readOrder(String(req.params.reference));
 
   if (!order) {
     return res.status(404).json({
@@ -249,7 +372,7 @@ function getOrderStatus(req, res) {
  * "amount_mismatch" when the paid amount differs). Always responds 200
  * quickly so HashPay does not retry; only a bad signature gets a 401.
  */
-function handleHashpayWebhook(req, res) {
+async function handleHashpayWebhook(req, res) {
   const headerValue = req.get('X-Hashpay-Signature') || '';
   const rawBody = Buffer.isBuffer(req.body) ? req.body : Buffer.from('');
 
@@ -266,7 +389,7 @@ function handleHashpayWebhook(req, res) {
   }
 
   try {
-    processPaymentSuccess(event);
+    await processPaymentSuccess(event);
   } catch (err) {
     console.error('[webhook] processing error:', err);
   }
@@ -303,7 +426,7 @@ function verifySignature(rawBody, headerValue) {
  * Handle a payment.success payload: find the order by TransactionReference,
  * guard the amount, and store the result.
  */
-function processPaymentSuccess(event) {
+async function processPaymentSuccess(event) {
   const eventType = String(deepFind(event, ['event', 'type', 'eventType', 'event_type']) || '').toLowerCase();
   const hasPaymentFields = deepFind(event, ['TransactionReference', 'Reference']) !== undefined;
 
@@ -319,7 +442,7 @@ function processPaymentSuccess(event) {
   const amount = deepFind(event, ['TransactionAmount', 'Amount']);
   const receipt = deepFind(event, ['TransactionReceipt', 'Receipt', 'MpesaReceiptNumber']) || null;
 
-  const order = orders.get(String(reference));
+  const order = await readOrder(String(reference));
   if (!order) {
     console.warn('[webhook] payment.success for unknown reference "' + reference + '" — ignored.');
     return;
@@ -327,16 +450,14 @@ function processPaymentSuccess(event) {
 
   // Amount guard: the paid amount must match what the order expected.
   if (money(amount) !== money(order.amount)) {
-    order.status = 'amount_mismatch';
-    order.receipt = receipt;
+    await writeOrder(reference, Object.assign({}, order, { status: 'amount_mismatch', receipt }));
     console.warn(
       '[webhook] amount mismatch for "' + reference + '": expected ' + order.amount + ', paid ' + amount
     );
     return;
   }
 
-  order.status = 'success';
-  order.receipt = receipt;
+  await writeOrder(reference, Object.assign({}, order, { status: 'success', receipt }));
   console.log('[webhook] order "' + reference + '" marked success, receipt: ' + receipt);
 }
 
@@ -362,6 +483,40 @@ function deepFind(obj, keys) {
   return undefined;
 }
 
+/**
+ * Pull a human-readable reason out of a HashBack/HashPay response body.
+ * They are not consistent about which field carries the message, so check the
+ * common ones before falling back to the raw string.
+ */
+function extractUpstreamMessage(data) {
+  if (!data || typeof data !== 'object') return null;
+  const candidates = [
+    data.message,
+    data.error_description,
+    data.error_message,
+    data.error,
+    data.ResponseDescription,
+    data.ResponseMessage,
+    data.fault_string,
+    data.detail,
+  ];
+  for (const value of candidates) {
+    if (typeof value === 'string' && value.trim()) return value.trim();
+  }
+  return null;
+}
+
+/**
+ * Safe-to-log identifier for a secret: enough to tell two keys apart in the
+ * logs (e.g. "h260…VMc") without ever printing the credential itself.
+ */
+function fingerprint(value) {
+  if (!value) return '(unset)';
+  const s = String(value);
+  if (s.length <= 6) return '*'.repeat(s.length);
+  return s.slice(0, 4) + '…' + s.slice(-2) + ' (len ' + s.length + ')';
+}
+
 /** Generate a fallback order reference when the frontend omits one. */
 function makeReference() {
   return (
@@ -375,6 +530,38 @@ function makeReference() {
 // ── BOOT ────────────────────────────────────────────────────────────────────
 
 const PORT = process.env.PORT || 3000;
+
+// ── CREDENTIAL SELF-CHECK ────────────────────────────────────────────────────
+// HashBack keys/tills are scoped per key, so a stale key produces a confusing
+// 403 ("Account expired") even when the account itself is fine. Print a
+// masked fingerprint of the credentials this process actually loaded, so a
+// key mismatch against another site is visible in the boot log immediately.
+console.log(
+  '[sasa-backend] HashBack config ->',
+  'endpoint:', HASHBACK_INITIATE_URL,
+  '| api_key:', fingerprint(process.env.HASHBACK_API_KEY),
+  '| account_id:', process.env.HASHBACK_ACCOUNT_ID || '(UNSET)',
+  '| webhook secret:', process.env.HASHBACK_WEBHOOK_SECRET ? 'set' : '(UNSET)',
+  '| order store:', KV_URL && KV_TOKEN ? 'vercel-kv' : 'in-memory (NOT serverless-safe)'
+);
+if (!process.env.HASHBACK_API_KEY || !process.env.HASHBACK_ACCOUNT_ID) {
+  console.warn(
+    '[sasa-backend] WARNING: HASHBACK_API_KEY / HASHBACK_ACCOUNT_ID are not set, so ' +
+    'every STK push will be refused with a 503. Searched for .env in "' +
+    path.join(__dirname, 'backend', '.env') + '" and "' + path.join(__dirname, '.env') +
+    '". Set them in the host environment, in one of those files, or as Vercel ' +
+    'environment variables.'
+  );
+}
+if (!(KV_URL && KV_TOKEN)) {
+  console.warn(
+    '[sasa-backend] WARNING: no KV_REST_API_URL / KV_REST_API_TOKEN, so orders are ' +
+    'held in memory. On Vercel the status poll and the HashPay webhook will not see ' +
+    'the order created by /api/stk/initiate and the page will hang on "pending". ' +
+    'Attach a KV store in the Vercel dashboard before going live.'
+  );
+}
+
 app.listen(PORT, function () {
   console.log('[sasa-backend] listening on http://localhost:' + PORT);
 });

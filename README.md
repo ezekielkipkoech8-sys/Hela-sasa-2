@@ -11,25 +11,45 @@ HashBack (HashPay) and confirms payments through signed webhooks.
 | `GET`  | `/api/stk/status/:reference` | Order status for polling: `pending`, `success`, `failed`, `amount_mismatch` |
 | `POST` | `/api/webhook/hashpay` | HashPay webhook, verified with `X-Hashpay-Signature` (HMAC-SHA256 of the raw body) |
 
+## Layout
+
+| Path | Purpose |
+| ---- | ------- |
+| `server.js` | **The deployed entrypoint** — `vercel.json` builds this file. |
+| `helasasa.com/` | The scraped frontend (landing page, `personal-details.html`). |
+| `public/` | The static STK push pages (`express-stk.html`, …). |
+| `backend/` | An older duplicate of `server.js` kept for reference — not deployed (see `.vercelignore`). |
+
+`server.js` serves `helasasa.com/` and `public/` itself, so the whole flow runs
+from a single origin with no CORS or second host to configure.
+
 ## Local setup
 
 ```bash
-cd backend
 npm install
-cp .env.example .env        # Windows PowerShell: Copy-Item .env.example .env
+copy .env.example .env        # Windows PowerShell
 # …fill in your real HashBack credentials in .env
-npm run dev                 # → http://localhost:3999
+npm start                     # → http://localhost:3000
 ```
 
 Get the API key, account ID and webhook secret from your HashPay dashboard.
 Never commit the `.env` file — only `.env.example` belongs in git.
 
+`server.js` loads `.env` **by absolute path** (repository root first, then
+`backend/`), so the credentials are found no matter which directory you launch
+`node` from. This matters: a bare `dotenv.config()` reads only `process.cwd()`,
+which silently loaded nothing and sent every STK push with `api_key: undefined` —
+HashBack rejected it and no M-PESA prompt ever reached the phone, while the
+server still answered `200` so nothing looked broken.
+
+If the credentials are missing, the server warns at boot and
+`/api/stk/initiate` returns `503` instead of calling HashBack with blanks.
+
 ## Frontend wiring
 
-`helasasa.com/personal-details.html` calls `http://localhost:3999` by default.
-In production, set `window.MPESA_API_BASE = 'https://<your-backend-url>'`
-before that script runs (or change the `MPESA_API_BASE` fallback in the page)
-to point at your deployed backend.
+`public/express-stk.html` calls the API with `API_BASE = ''` — same origin, so
+no configuration is needed when the pages are served by this same `server.js`.
+To point it at a separately hosted backend, set `API_BASE` to that origin.
 
 ## Deploying & pointing the webhook at this service
 

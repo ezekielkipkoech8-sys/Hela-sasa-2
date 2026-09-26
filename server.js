@@ -41,6 +41,43 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const HASHBACK_INITIATE_URL = 'https://api.hashback.co.ke/initiatestk';
 const MSISDN_PATTERN = /^254[71]\d{8}$/; // 254 + 7XXXXXXXX / 1XXXXXXXX (12 digits)
 
+// ── LOAN CEILING ─────────────────────────────────────────────────────────────
+// Enforced on the page routes because ?loanAmount= is a query string the
+// applicant controls: the browser's max="10000" is a convenience for the user,
+// not a limit. The minimum is deliberately NOT duplicated here — it stays a
+// browser-side concern and the server must not change it in this pass.
+const MAX_LOAN_AMOUNT = 10000;
+
+/**
+ * True when ?loanAmount= is above the ceiling. Tolerates "10,000"
+ * (comma-grouped) and a missing value — no param is the normal first visit to
+ * the form, not an error. Junk returns false so the browser's own validation
+ * handles it instead of the server guessing.
+ */
+function loanAmountOverCap(req) {
+  const raw = req.query.loanAmount;
+  if (raw === undefined || raw === null || raw === '') return false;
+  const n = Number(String(raw).replace(/,/g, ''));
+  return Number.isFinite(n) && n > MAX_LOAN_AMOUNT;
+}
+
+/**
+ * Bounce back to `targetPath` with ?error=amount so the page can show its own
+ * inline message, rather than serving a bare JSON body to a browser that got
+ * here by following a link. Every other query parameter the applicant already
+ * had (phone, …) is carried over; `loanAmount` is dropped on purpose, because
+ * keeping it would re-enter this guard on the next request and loop forever.
+ */
+function redirectWithAmountError(req, res, targetPath) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(req.query || {})) {
+    if (key === 'loanAmount' || key === 'error' || value === undefined) continue;
+    params.set(key, Array.isArray(value) ? value[0] : String(value));
+  }
+  params.set('error', 'amount');
+  return res.redirect(302, targetPath + '?' + params.toString());
+}
+
 /**
  * Order store — Vercel KV (Upstash REST) backed, with an in-memory fallback.
  *
@@ -138,10 +175,17 @@ app.get('/display.php', (req, res) => {
 });
 
 app.get('/loan-request.php', (req, res) => {
+  if (loanAmountOverCap(req)) {
+    return redirectWithAmountError(req, res, '/loan-request.php');
+  }
   res.sendFile(path.join(__dirname, 'public', 'loan-request.html'));
 });
 
 app.get('/final-step.php', (req, res) => {
+  if (loanAmountOverCap(req)) {
+    // Back to the form — that is where the amount field and its inline error live.
+    return redirectWithAmountError(req, res, '/loan-request.php');
+  }
   res.sendFile(path.join(__dirname, 'public', 'final-step.html'));
 });
 

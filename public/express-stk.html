@@ -124,6 +124,53 @@
     font-weight: 600;
   }
 
+  /* ── Locked (fixed) insurance fee ────────────────────────────────────────────
+     The figure arrives from final-step.html through the ?amount= query
+     parameter (see the prefill further down) and must not be re-typed or nudged
+     here. `readonly`, never `disabled`, so the value still submits with the STK
+     request; and the number spinner is suppressed so neither the on-screen
+     arrows nor the arrow keys can change it. The attribute itself lives in the
+     static markup, so it is live from the first parse — there is no window in
+     which the field is editable, and no flash of an unlocked input before
+     ?amount= is read. */
+  .input-wrap.locked {
+    background: #e6e3d6;
+    box-shadow: inset 0 0 0 1px #d6d2c1;
+  }
+  .input-wrap.locked input {
+    color: #5f6559;
+    cursor: not-allowed;
+  }
+  .input-wrap.locked input[type="number"] {
+    -moz-appearance: textfield;     /* Firefox: drop the spinner */
+    appearance: textfield;
+  }
+  .input-wrap.locked input[type="number"]::-webkit-outer-spin-button,
+  .input-wrap.locked input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;       /* Chrome / Safari: drop the spinner */
+    margin: 0;
+  }
+  .input-wrap .lock-tag {
+    flex: none;
+    margin: 0 13px 0 10px;
+    padding: 5px 11px;
+    background: #d3cdbb;
+    color: #5b543f;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .field-note {
+    font-size: 12px;
+    color: #7d8479;
+    margin: -12px 0 20px;
+  }
+
   button.send-btn {
     width: 100%;
     background: var(--green-dark);
@@ -169,10 +216,17 @@
         </div>
 
         <label for="amount">Insurance Fee Amount (Ksh)</label>
-        <div class="input-wrap">
+        <div class="input-wrap locked">
           <span class="prefix">Ksh</span>
-          <input type="number" id="amount" placeholder="1500" required min="1">
+          <!-- Fee is set by final-step.html via ?amount= and read into this field
+               by the prefill script below. `readonly` (never `disabled`) so the
+               applicant cannot type over it while the value still travels with
+               the STK request. -->
+          <input type="number" id="amount" placeholder="1500" required min="1"
+                 readonly aria-readonly="true" autocomplete="off">
+          <span class="lock-tag" aria-hidden="true">🔒 Fixed</span>
         </div>
+        <div class="field-note">This fee is fixed and cannot be changed.</div>
 
         <button type="submit" class="send-btn" id="payBtn">Send M-PESA Request →</button>
       </form>
